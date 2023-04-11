@@ -337,4 +337,10 @@
     <string name="custom_timeout_summary_2hours">2 hours</string>
     <string name="custom_timeout_summary_4hours">4 hours</string>
     <string name="custom_timeout_summary_8hours">8 hours</string>
+
+    <!-- Ambient wake toggles -->
+    <string name="doze_gesture_ambient_title">Show Ambient</string>
+    <string name="doze_gesture_ambient_summary">Show Ambient Display instead of fully waking the screen up</string>
+    <string name="gesture_wake_ambient">Show Ambient</string>
+    <string name="gesture_wake">Fully wake</string>
 </resources>
