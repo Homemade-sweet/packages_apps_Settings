@@ -343,4 +343,12 @@
     <string name="doze_gesture_ambient_summary">Show Ambient Display instead of fully waking the screen up</string>
     <string name="gesture_wake_ambient">Show Ambient</string>
     <string name="gesture_wake">Fully wake</string>
+
+    <!-- Device Info screen. -->
+    <string name="about_device_nearby">The device name can and will be seen by the nearby devices.</string>
+    <string name="hardware_info_title">Hardware info</string>
+    <string name="battery">Battery</string>
+    <string name="display">Display</string>
+    <string name="storage">Storage</string>
+    <string name="chipset">Processor</string>
 </resources>

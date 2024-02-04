@@ -18,4 +18,9 @@
 <resources>
     <!-- Fingerprint -->
     <dimen name="fingerprint_find_sensor_padding_top">16dp</dimen>
+    
+    <!-- Settings UI -->
+    <dimen name="card_margin_start_aqua">20dp</dimen>
+    <dimen name="card_margin_end_aqua">20dp</dimen>
+    <dimen name="top_level_preference_summary_max_width">200dp</dimen>
 </resources>
