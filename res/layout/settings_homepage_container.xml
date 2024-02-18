@@ -92,7 +92,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:layout_gravity="top|end"
-        style="@style/mtx_text_style_h6"
+        style="@style/op_control_text_style_h6"
         app:backgroundTint="@color/settingslib_btn_colored_background_material"
         app:iconTint="@color/settingslib_btn_colored_text_material"
         app:hideMotionSpec="@anim/fab_hide"
