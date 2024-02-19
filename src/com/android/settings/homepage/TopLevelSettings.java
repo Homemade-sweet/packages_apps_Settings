@@ -22,21 +22,36 @@ import static com.android.settingslib.search.SearchIndexable.MOBILE;
 import android.app.ActivityManager;
 import android.app.settings.SettingsEnums;
 import android.content.Context;
+import android.content.ComponentName;
+import android.content.Intent;
 import android.content.res.Configuration;
+import android.content.pm.UserInfo;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.UserHandle;
+import android.os.UserManager;
+import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.VisibleForTesting;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceScreen;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.window.embedding.ActivityEmbeddingController;
+
+import com.android.internal.util.UserIcons;
 
 import com.android.settings.R;
 import com.android.settings.Utils;
@@ -50,8 +65,16 @@ import com.android.settings.support.SupportPreferenceController;
 import com.android.settings.widget.HomepagePreference;
 import com.android.settings.widget.HomepagePreferenceLayoutHelper.HomepagePreferenceLayout;
 import com.android.settingslib.core.instrumentation.Instrumentable;
+import com.android.settingslib.drawable.CircleFramedDrawable;
 import com.android.settingslib.drawer.Tile;
 import com.android.settingslib.search.SearchIndexable;
+import com.android.settingslib.widget.LayoutPreference;
+
+import java.util.Set;
+import java.util.HashSet;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Random;
 
 @SearchIndexable(forTarget = MOBILE)
 public class TopLevelSettings extends DashboardFragment implements SplitLayoutListener,
@@ -67,6 +90,9 @@ public class TopLevelSettings extends DashboardFragment implements SplitLayoutLi
     private boolean mScrollNeeded = true;
     private boolean mFirstStarted = true;
     private ActivityEmbeddingController mActivityEmbeddingController;
+    
+    private boolean googleServicesAvailable;
+    private int extraPreferenceOrder = -151;
 
     public TopLevelSettings() {
         final Bundle args = new Bundle();
@@ -164,6 +190,49 @@ public class TopLevelSettings extends DashboardFragment implements SplitLayoutLi
             mHighlightMixin = new TopLevelHighlightMixin(activityEmbedded);
         }
     }
+    
+    private void initHomepageWidgetsView() {
+    	final LayoutPreference searchWidgetPreference =
+                        (LayoutPreference) getPreferenceScreen().findPreference("top_level_search_widget");
+        if (searchWidgetPreference != null) {
+            final ImageView avatarView = bannerPreference.findViewById(R.id.account_avatar);
+            avatarView.setImageDrawable(getCircularUserIcon(getActivity()));
+            avatarView.bringToFront();
+            avatarView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    launchComponent("com.android.settings", "com.android.settings.Settings$UserSettingsActivity");
+                }
+            });
+        }
+        
+        if (searchWidgetPreference != null) {
+                final ImageView avatarView = searchWidgetPreference.findViewById(R.id.avatar_widget_icon);
+                avatarView.setImageDrawable(getCircularUserIcon(getActivity()));
+                avatarView.bringToFront();
+                avatarView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        launchComponent("com.android.settings", "com.android.settings.Settings$UserSettingsActivity");
+                    }
+                });
+                final ImageView searchIcon = searchWidgetPreference.findViewById(R.id.search_widget_icon);
+                final View searchView = searchWidgetPreference.findViewById(R.id.search_widget);
+                final TextView searchTextView = searchWidgetPreference.findViewById(R.id.homepage_search_text);
+                searchIcon.bringToFront();
+                if (activity != null) {
+                    FeatureFactory.getFactory(activity).getSearchFeatureProvider().initSearchToolbar(activity /* activity */, searchView, (View) searchIcon, SettingsEnums.SETTINGS_HOMEPAGE);
+                }
+            }
+        }
+    }
+    
+    private String getOwnerName(){
+        final UserManager mUserManager = getSystemService(UserManager.class);
+        final UserInfo userInfo = com.android.settings.Utils.getExistingUser(mUserManager,
+                    UserHandle.of(UserHandle.myUserId()));
+        return userInfo.name != null ? userInfo.name : getString(R.string.default_user);
+    }
 
     /** Wrap ActivityEmbeddingController#isActivityEmbedded for testing. */
     @VisibleForTesting
@@ -213,6 +282,10 @@ public class TopLevelSettings extends DashboardFragment implements SplitLayoutLi
             Drawable icon = preference.getIcon();
             if (icon != null) {
                 icon.setTint(tintColor);
+            }
+            String preferenceKey = preference.getKey();
+            if (preferenceKey != null && !("top_level_search_widget".equals(preferenceKey))) {
+                setUpPreferenceLayout(preference);
             }
         });
     }

@@ -19,6 +19,12 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:settings="http://schemas.android.com/apk/res-auto"
     android:key="top_level_settings">
+    	
+    <com.android.settingslib.widget.LayoutPreference
+        android:layout="@layout/homepage_search_widget"
+        android:key="top_level_search_widget"
+        android:selectable="false"
+        android:order="-160" />	
 
     <com.android.settings.widget.HomepagePreference
         android:fragment="com.android.settings.network.NetworkDashboardFragment"
