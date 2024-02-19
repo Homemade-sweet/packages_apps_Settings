@@ -193,7 +193,19 @@ public class TopLevelSettings extends DashboardFragment implements SplitLayoutLi
     
     private void initHomepageWidgetsView() {
     	final LayoutPreference searchWidgetPreference =
-                        (LayoutPreference) getPreferenceScreen().findPreference("top_level_search_widget");        
+                        (LayoutPreference) getPreferenceScreen().findPreference("top_level_search_widget");
+        if (searchWidgetPreference != null) {
+            final ImageView avatarView = bannerPreference.findViewById(R.id.account_avatar);
+            avatarView.setImageDrawable(getCircularUserIcon(getActivity()));
+            avatarView.bringToFront();
+            avatarView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    launchComponent("com.android.settings", "com.android.settings.Settings$UserSettingsActivity");
+                }
+            });
+        }    
+            
         if (searchWidgetPreference != null) {
                 final ImageView avatarView = searchWidgetPreference.findViewById(R.id.avatar_widget_icon);
                 avatarView.setImageDrawable(getCircularUserIcon(getActivity()));
@@ -213,23 +225,6 @@ public class TopLevelSettings extends DashboardFragment implements SplitLayoutLi
                 }
             }
         }
-    }
-    
-    private Drawable getCircularUserIcon(Context context) {
-        final UserManager mUserManager = getSystemService(UserManager.class);
-        Bitmap bitmapUserIcon = mUserManager.getUserIcon(UserHandle.myUserId());
-
-        if (bitmapUserIcon == null) {
-            // get default user icon.
-            final Drawable defaultUserIcon = UserIcons.getDefaultUserIcon(
-                    context.getResources(), UserHandle.myUserId(), false);
-            bitmapUserIcon = UserIcons.convertToBitmap(defaultUserIcon);
-        }
-        Drawable drawableUserIcon = new CircleFramedDrawable(bitmapUserIcon,
-                (int) context.getResources().getDimension(R.dimen.homepage_user_icon_size));
-
-        return drawableUserIcon;
-    }
     
     private String getOwnerName(){
         final UserManager mUserManager = getSystemService(UserManager.class);
