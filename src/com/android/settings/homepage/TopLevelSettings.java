@@ -193,19 +193,7 @@ public class TopLevelSettings extends DashboardFragment implements SplitLayoutLi
     
     private void initHomepageWidgetsView() {
     	final LayoutPreference searchWidgetPreference =
-                        (LayoutPreference) getPreferenceScreen().findPreference("top_level_search_widget");
-        if (searchWidgetPreference != null) {
-            final ImageView avatarView = bannerPreference.findViewById(R.id.account_avatar);
-            avatarView.setImageDrawable(getCircularUserIcon(getActivity()));
-            avatarView.bringToFront();
-            avatarView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    launchComponent("com.android.settings", "com.android.settings.Settings$UserSettingsActivity");
-                }
-            });
-        }
-        
+                        (LayoutPreference) getPreferenceScreen().findPreference("top_level_search_widget");        
         if (searchWidgetPreference != null) {
                 final ImageView avatarView = searchWidgetPreference.findViewById(R.id.avatar_widget_icon);
                 avatarView.setImageDrawable(getCircularUserIcon(getActivity()));
